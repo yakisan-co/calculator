@@ -10,30 +10,25 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.yakisan.calculator.navigation.Navigation
 import com.yakisan.calculator.ui.theme.CalculatorTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            CalculatorTheme {
+            CalculatorTheme(
+                statusBarColor = com.yakisan.calculator.core.getTheme(),
+                navigationBarColor = com.yakisan.calculator.core.getTheme()
+            ) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = com.yakisan.calculator.core.getTheme()
                 ) {
-                    //TODO: It should be navigation.
+                    Navigation()
                 }
             }
         }
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CalculatorTheme {
-
     }
 }
