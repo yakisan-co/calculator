@@ -52,7 +52,7 @@ fun CalculatorTheme(
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     statusBarColor: androidx.compose.ui.graphics.Color? = if (darkTheme) DarkBlue else LightBlue,
-    navigationBarColor: androidx.compose.ui.graphics.Color? = if (darkTheme) DarkBlue else LightBlue,
+    navigationBarColor: androidx.compose.ui.graphics.Color? = if (darkTheme) DarkColor else White,
     activity: Activity = LocalContext.current as MainActivity,
     content: @Composable () -> Unit
 ) {
