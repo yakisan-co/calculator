@@ -35,6 +35,6 @@ fun getTheme(): Color {
 }
 
 @Composable
-fun getTextTheme() : Color {
-    return if(isSystemInDarkTheme()) LightBlue else DarkBlue
+fun getTextTheme(): Color {
+    return if (isSystemInDarkTheme()) LightBlue else DarkBlue
 }
