@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hesap Makinesi</string>
+    <string name="del">Sil</string>
+    <string name="history">Geçmiş</string>
+</resources>

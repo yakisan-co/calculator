@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -75,9 +73,16 @@ dependencies {
     //Base Libraries
     implementation("androidx.datastore:datastore-preferences:1.0.0") //Shared Preferences
     implementation("androidx.navigation:navigation-compose:2.7.5") //Navigation
-    implementation("com.google.dagger:hilt-android:2.48")
-    kapt("com.google.dagger:hilt-android-compiler:2.48")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation("com.google.dagger:hilt-android:2.48") //Hilt for DI
+    kapt("com.google.dagger:hilt-android-compiler:2.48") //Hilt compiler for DI
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0") //Navigation for DI
+    implementation("androidx.room:room-runtime:2.6.0") //Room for local db
+    annotationProcessor("androidx.room:room-compiler:2.6.0") //Room compiler for local db
+    kapt("androidx.room:room-compiler:2.6.0") // Kotlin annotation processing tool (kapt)
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
+    implementation("androidx.room:room-ktx:2.6.0")
+
+
 
 }
 

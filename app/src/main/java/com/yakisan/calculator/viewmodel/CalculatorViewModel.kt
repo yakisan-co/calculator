@@ -1,24 +1,34 @@
 package com.yakisan.calculator.viewmodel
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.yakisan.calculator.core.Constant.MAX_NUM_LENGTH
+import com.yakisan.calculator.data.History
 import com.yakisan.calculator.domain.CalculatorAction
 import com.yakisan.calculator.domain.CalculatorOperation
 import com.yakisan.calculator.domain.CalculatorState
+import com.yakisan.calculator.repository.HistoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class CalculatorViewModel @Inject constructor(
+    private val repository: HistoryRepository
 ) : ViewModel() {
 
     var state by mutableStateOf(CalculatorState())
     var history by mutableStateOf("")
 
+    //Add onAction (Calculator Actions) func.
+    @RequiresApi(Build.VERSION_CODES.O)
     fun onAction(action: CalculatorAction) {
         when (action) {
             is CalculatorAction.Number -> enterNumber(action.number)
@@ -27,6 +37,7 @@ class CalculatorViewModel @Inject constructor(
                 state = CalculatorState()
                 history = ""
             }
+
             is CalculatorAction.Operation -> enterOperation(action.operation)
             is CalculatorAction.Decimal -> enterDecimal()
             is CalculatorAction.Calculate -> calculate()
@@ -35,12 +46,15 @@ class CalculatorViewModel @Inject constructor(
         }
     }
 
+    //Enter operation (-, *, %, /, +) func.
     private fun enterOperation(operation: CalculatorOperation) {
         if (state.number1.isNotBlank()) {
             state = state.copy(operation = operation)
         }
     }
 
+    //Add general calculate func.
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun calculate() {
         val number1 = state.number1.toDoubleOrNull()
         val number2 = state.number2.toDoubleOrNull()
@@ -62,8 +76,21 @@ class CalculatorViewModel @Inject constructor(
                     return
                 }
             }
-            history = number1.toString() + " " + (state.operation?.symbol
-                ?: "") + " " + number2.toString()
+            val currentDate = LocalDate.now()
+            history = "$number1 ${state.operation?.symbol ?: ""} $number2"
+
+            viewModelScope.launch {
+                repository.insertHistory(
+                    history = History(
+                        dayOfMonth = currentDate.dayOfMonth.toString(),
+                        month = currentDate.month.toString(),
+                        year = currentDate.year.toString(),
+                        value = history.toString(),
+                        result = result.toString()
+                    )
+                )
+            }
+
             state = state.copy(
                 number1 = result.toString().take(15),
                 number2 = "",
@@ -72,6 +99,7 @@ class CalculatorViewModel @Inject constructor(
         }
     }
 
+    //Add delete func.
     private fun delete() {
         when {
             state.number2.isNotBlank() -> state = state.copy(
@@ -88,6 +116,7 @@ class CalculatorViewModel @Inject constructor(
         }
     }
 
+    //Add percentage func.
     private fun performPercentage() {
         val number1 = state.number1.toDoubleOrNull()
         val number2 = state.number2.toDoubleOrNull()
@@ -101,6 +130,7 @@ class CalculatorViewModel @Inject constructor(
         }
     }
 
+    //Add decimal func.
     private fun enterDecimal() {
         if (state.operation == null && !state.number1.contains(".") && state.number1.isNotBlank()) {
             state = state.copy(
@@ -114,6 +144,7 @@ class CalculatorViewModel @Inject constructor(
         }
     }
 
+    //Add double zero func.
     private fun addZero() {
         if (state.operation == null) {
             state = state.copy(
@@ -126,6 +157,7 @@ class CalculatorViewModel @Inject constructor(
         )
     }
 
+    //Enter number func.
     private fun enterNumber(number: Int) {
         if (state.operation == null) {
             if (state.number1.length >= MAX_NUM_LENGTH) {

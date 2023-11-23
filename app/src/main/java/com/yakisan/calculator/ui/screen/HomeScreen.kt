@@ -26,6 +26,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.yakisan.calculator.R
 import com.yakisan.calculator.components.AppBar
 import com.yakisan.calculator.components.CalculatorButton
 import com.yakisan.calculator.core.getTextTheme
@@ -79,7 +81,7 @@ fun HomeScreen(viewModel: CalculatorViewModel = hiltViewModel(), navController: 
             ) {
                 // Navigating history screen
                 AppBar(
-                    title = "Calculator",
+                    title = stringResource(id = R.string.app_name),
                     onClick = {
                         navController.navigate(Screen.HistoryScreen.route)
                     },
@@ -152,7 +154,7 @@ fun HomeScreen(viewModel: CalculatorViewModel = hiltViewModel(), navController: 
                             viewModel.onAction(CalculatorAction.Clear)
                         }
                         CalculatorButton(
-                            symbol = "Del",
+                            symbol = stringResource(id = R.string.del),
                             modifier = Modifier
                                 .aspectRatio(1f)
                                 .weight(1f),
