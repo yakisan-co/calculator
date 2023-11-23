@@ -47,7 +47,7 @@ fun Navigation() {
                 )
             })
         {
-            HomeScreen(navController)
+            HomeScreen(navController= navController)
         }
 
         //Home Screen

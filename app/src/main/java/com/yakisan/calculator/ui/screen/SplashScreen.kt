@@ -48,7 +48,7 @@ fun SplashScreen(navController: NavController) {
         ) {
             Image(
                 modifier = Modifier
-                    .size(MaterialTheme.dimens.logoSize),
+                    .size(MaterialTheme.dimens.logoSize / 1.5f),
                 painter = painterResource(id = logo),
                 contentDescription = "Calculator logo"
             )

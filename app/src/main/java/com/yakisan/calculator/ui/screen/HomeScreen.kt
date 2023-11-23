@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,68 +15,72 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.yakisan.calculator.components.AppBar
 import com.yakisan.calculator.components.CalculatorButton
 import com.yakisan.calculator.core.getTextTheme
 import com.yakisan.calculator.core.getTheme
+import com.yakisan.calculator.domain.CalculatorAction
+import com.yakisan.calculator.domain.CalculatorOperation
 import com.yakisan.calculator.navigation.Screen
 import com.yakisan.calculator.ui.theme.CalculatorTheme
+import com.yakisan.calculator.ui.theme.DarkBlue
 import com.yakisan.calculator.ui.theme.DarkColor
 import com.yakisan.calculator.ui.theme.DarkGray
+import com.yakisan.calculator.ui.theme.LightBlue
 import com.yakisan.calculator.ui.theme.White
 import com.yakisan.calculator.ui.theme.Yellow
 import com.yakisan.calculator.ui.theme.dimens
-import com.yakisan.calculator.domain.CalculatorAction
-import com.yakisan.calculator.domain.CalculatorOperation
 import com.yakisan.calculator.viewmodel.CalculatorViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(viewModel: CalculatorViewModel = hiltViewModel(), navController: NavController) {
     val context = LocalContext.current as Activity?
 
     CalculatorTheme(
         navigationBarColor = if (isSystemInDarkTheme()) DarkColor else White
     ) {
-        val viewModel = viewModel<CalculatorViewModel>() //VM
         val state = viewModel.state
         val result = state.number1 + (state.operation?.symbol ?: "") + state.number2
+        val history = viewModel.history
         val buttonSpacing = 8.dp
 
         val resultFontStatus = remember { mutableStateOf(50.sp) }
         if (result.length > 8) resultFontStatus.value = 30.sp else resultFontStatus.value = 50.sp
-
 
         //Content
         Column(
             modifier = Modifier
                 .background(color = getTheme())
                 .fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 // Navigating history screen
                 AppBar(
-                    historyOnClick = {
+                    title = "Calculator",
+                    onClick = {
                         navController.navigate(Screen.HistoryScreen.route)
                     },
                 )
@@ -84,12 +89,12 @@ fun HomeScreen(navController: NavController) {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .wrapContentHeight()
                         .padding(
+                            start = MaterialTheme.dimens.medium1,
                             end = MaterialTheme.dimens.medium1,
-                            top = MaterialTheme.dimens.large / 2
+                            top = MaterialTheme.dimens.large / 2,
                         ),
-                    text = result,
+                    text = history,
                     style = MaterialTheme.typography.headlineLarge.copy(color = DarkGray),
                     textAlign = TextAlign.End,
                     maxLines = 1
@@ -99,8 +104,8 @@ fun HomeScreen(navController: NavController) {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .wrapContentHeight()
                         .padding(
+                            start = MaterialTheme.dimens.medium1,
                             end = MaterialTheme.dimens.medium1,
                         ),
                     text = result,
@@ -114,19 +119,20 @@ fun HomeScreen(navController: NavController) {
             }
 
 
+            //Calculator Content
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
                     .padding(top = MaterialTheme.dimens.large / 2f)
                     .background(color = if (isSystemInDarkTheme()) DarkColor else White),
             ) {
-
+                //Main Column
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .align(Alignment.BottomCenter),
+                        .align(BottomCenter),
                     verticalArrangement = Arrangement.spacedBy(buttonSpacing),
                 ) {
+                    //1st Row including AC, Del, % , /
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -139,7 +145,7 @@ fun HomeScreen(navController: NavController) {
                                 .weight(1f),
                             textStyle = TextStyle(
                                 fontWeight = FontWeight(900),
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
                             )
 
                         ) {
@@ -152,13 +158,12 @@ fun HomeScreen(navController: NavController) {
                                 .weight(1f),
                             textStyle = TextStyle(
                                 fontWeight = FontWeight(500),
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
                             )
                         ) {
                             viewModel.onAction(CalculatorAction.Delete)
                         }
 
-                        //TODO: Yuzde islemi yapmalı
                         CalculatorButton(
                             symbol = "%",
                             modifier = Modifier
@@ -166,7 +171,7 @@ fun HomeScreen(navController: NavController) {
                                 .weight(1f),
                             textStyle = TextStyle(
                                 fontWeight = FontWeight(500),
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
                             )
                         ) {
                             viewModel.onAction(CalculatorAction.Operation(CalculatorOperation.Percent))
@@ -177,11 +182,16 @@ fun HomeScreen(navController: NavController) {
                                 .aspectRatio(1f)
                                 .weight(1f),
                             textColor = Yellow,
-                            textStyle = TextStyle(fontWeight = FontWeight(500), fontSize = 35.sp)
+                            textStyle = TextStyle(
+                                fontWeight = FontWeight(900),
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize * 1.2f
+                            )
                         ) {
                             viewModel.onAction(CalculatorAction.Operation(CalculatorOperation.Divide))
                         }
                     }
+
+                    //2st Row including 7,8,9,x
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -194,7 +204,7 @@ fun HomeScreen(navController: NavController) {
                                 .weight(1f),
                             textStyle = TextStyle(
                                 fontWeight = FontWeight(500),
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
                             )
                         ) {
                             viewModel.onAction(CalculatorAction.Number(7))
@@ -206,7 +216,7 @@ fun HomeScreen(navController: NavController) {
                                 .weight(1f),
                             textStyle = TextStyle(
                                 fontWeight = FontWeight(500),
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
                             )
 
                         ) {
@@ -219,7 +229,7 @@ fun HomeScreen(navController: NavController) {
                                 .weight(1f),
                             textStyle = TextStyle(
                                 fontWeight = FontWeight(500),
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
                             )
                         ) {
                             viewModel.onAction(CalculatorAction.Number(9))
@@ -230,11 +240,16 @@ fun HomeScreen(navController: NavController) {
                                 .aspectRatio(1f)
                                 .weight(1f),
                             textColor = Yellow,
-                            textStyle = TextStyle(fontWeight = FontWeight(500), fontSize = 35.sp)
+                            textStyle = TextStyle(
+                                fontWeight = FontWeight(600),
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize * 1.2f
+                            )
                         ) {
                             viewModel.onAction(CalculatorAction.Operation(CalculatorOperation.Multiply))
                         }
                     }
+
+                    //3rd Row including 4,5,6,-
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -247,7 +262,7 @@ fun HomeScreen(navController: NavController) {
                                 .weight(1f),
                             textStyle = TextStyle(
                                 fontWeight = FontWeight(500),
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
                             )
                         ) {
                             viewModel.onAction(CalculatorAction.Number(4))
@@ -259,7 +274,7 @@ fun HomeScreen(navController: NavController) {
                                 .weight(1f),
                             textStyle = TextStyle(
                                 fontWeight = FontWeight(500),
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
                             )
                         ) {
                             viewModel.onAction(CalculatorAction.Number(5))
@@ -271,22 +286,27 @@ fun HomeScreen(navController: NavController) {
                                 .weight(1f),
                             textStyle = TextStyle(
                                 fontWeight = FontWeight(500),
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
                             )
                         ) {
                             viewModel.onAction(CalculatorAction.Number(6))
                         }
                         CalculatorButton(
-                            symbol = "-",
+                            symbol = "—",
                             modifier = Modifier
                                 .aspectRatio(1f)
                                 .weight(1f),
                             textColor = Yellow,
-                            textStyle = TextStyle(fontWeight = FontWeight(500), fontSize = 35.sp)
+                            textStyle = TextStyle(
+                                fontWeight = FontWeight(500),
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize * 1.2f
+                            )
                         ) {
                             viewModel.onAction(CalculatorAction.Operation(CalculatorOperation.Subtract))
                         }
                     }
+
+                    //4th Row including 1,2,3,+
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -299,7 +319,7 @@ fun HomeScreen(navController: NavController) {
                                 .weight(1f),
                             textStyle = TextStyle(
                                 fontWeight = FontWeight(500),
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
                             )
                         ) {
                             viewModel.onAction(CalculatorAction.Number(1))
@@ -311,7 +331,7 @@ fun HomeScreen(navController: NavController) {
                                 .weight(1f),
                             textStyle = TextStyle(
                                 fontWeight = FontWeight(500),
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
                             )
                         ) {
                             viewModel.onAction(CalculatorAction.Number(2))
@@ -323,7 +343,7 @@ fun HomeScreen(navController: NavController) {
                                 .weight(1f),
                             textStyle = TextStyle(
                                 fontWeight = FontWeight(500),
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
                             )
                         ) {
                             viewModel.onAction(CalculatorAction.Number(3))
@@ -334,17 +354,21 @@ fun HomeScreen(navController: NavController) {
                                 .aspectRatio(1f)
                                 .weight(1f),
                             textColor = Yellow,
-                            textStyle = TextStyle(fontWeight = FontWeight(500), fontSize = 35.sp)
+                            textStyle = TextStyle(
+                                fontWeight = FontWeight(500),
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize * 1.2f
+                            )
                         ) {
                             viewModel.onAction(CalculatorAction.Operation(CalculatorOperation.Add))
                         }
                     }
+
+                    //Last Row including 00,0,.,=
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
                     ) {
-                        //TODO: +/- YAPILMALI
                         CalculatorButton(
                             symbol = "00",
                             modifier = Modifier
@@ -352,7 +376,7 @@ fun HomeScreen(navController: NavController) {
                                 .weight(1f),
                             textStyle = TextStyle(
                                 fontWeight = FontWeight(500),
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
                             )
                         ) {
                             viewModel.onAction(CalculatorAction.AddZero)
@@ -364,7 +388,7 @@ fun HomeScreen(navController: NavController) {
                                 .weight(1f),
                             textStyle = TextStyle(
                                 fontWeight = FontWeight(500),
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
                             )
                         ) {
                             viewModel.onAction(CalculatorAction.Number(0))
@@ -376,7 +400,7 @@ fun HomeScreen(navController: NavController) {
                                 .weight(1f),
                             textStyle = TextStyle(
                                 fontWeight = FontWeight(500),
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
                             )
                         ) {
                             viewModel.onAction(CalculatorAction.Decimal)
@@ -385,15 +409,20 @@ fun HomeScreen(navController: NavController) {
                             symbol = "=",
                             modifier = Modifier
                                 .aspectRatio(1f)
-                                .weight(1f),
+                                .weight(1f)
+                                .clip(shape = RoundedCornerShape(50))
+                                .background(
+                                    color = if (isSystemInDarkTheme()) DarkBlue else LightBlue,
+                                )
+                                .clickable { viewModel.onAction(CalculatorAction.Calculate) },
                             textColor = Yellow,
-                            textStyle = TextStyle(fontWeight = FontWeight(500), fontSize = 35.sp)
-                        ) {
-                            viewModel.onAction(CalculatorAction.Calculate)
-                        }
+                            textStyle = TextStyle(
+                                fontWeight = FontWeight(500),
+                                fontSize = MaterialTheme.typography.headlineMedium.fontSize * 1.5f
+                            )
+                        ) {}
                     }
                 }
-
 
             }
         }

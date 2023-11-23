@@ -22,12 +22,12 @@ val CompactSmallDimens = Dimens(
     small1 = 6.dp,
     small2 = 7.dp,
     small3 = 8.dp,
-    medium1 = 15.dp,
-    medium2 = 26.dp,
-    medium3 = 30.dp,
-    large = 45.dp,
-    buttonHeight = 60.dp,
-    logoSize = 80.dp,
+    medium1 = 10.dp,
+    medium2 = 20.dp,
+    medium3 = 25.dp,
+    large = 35.dp,
+    buttonHeight = 50.dp,
+    logoSize = 60.dp,
     onboardingImage = 250.dp
 )
 

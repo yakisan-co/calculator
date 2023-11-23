@@ -14,7 +14,6 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.input.key.Key.Companion.D
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -115,7 +114,7 @@ fun CalculatorTheme(
         }
     }
 
-    ProvideAppUtils(appDimens = appDimens) {
+    ProvideAppUtils(dimens = appDimens) {
         MaterialTheme(
             colorScheme = colorScheme,
             typography = typography,

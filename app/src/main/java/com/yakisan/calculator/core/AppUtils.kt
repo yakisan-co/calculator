@@ -10,10 +10,10 @@ import com.yakisan.calculator.ui.theme.Dimens
 
 @Composable
 fun ProvideAppUtils(
-    appDimens: Dimens,
+    dimens: Dimens,
     content: @Composable () -> Unit,
 ) {
-    val appDimens = remember { appDimens }
+    val appDimens = remember { dimens }
     CompositionLocalProvider(LocalAppDimens provides appDimens) {
         content()
     }
