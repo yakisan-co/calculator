@@ -19,22 +19,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import com.yakisan.calculator.core.getTextTheme
 import com.yakisan.calculator.core.getTheme
-import com.yakisan.calculator.domain.CalculatorOperation
 import com.yakisan.calculator.ui.theme.DarkBlue
 import com.yakisan.calculator.ui.theme.DarkGray
 import com.yakisan.calculator.ui.theme.LightBlue
 import com.yakisan.calculator.ui.theme.dimens
-import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HistoryCard(
-    date: LocalDateTime,
-    operation: CalculatorOperation,
+    dayOfMonth: String,
+    month: String,
+    year: String,
     value: String,
-    result: String
+    result: String,
 ) {
-    val boxColor = if(getTheme() == DarkBlue) LightBlue else DarkBlue
+    val boxColor = if (getTheme() == DarkBlue) LightBlue else DarkBlue
 
     Box(
         modifier = Modifier
@@ -51,7 +50,7 @@ fun HistoryCard(
             modifier = Modifier
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.Start
         ) {
             Box(
                 modifier = Modifier
@@ -61,40 +60,33 @@ fun HistoryCard(
                 Column(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .background(color = getTextTheme().copy(0.5f))
+                        .background(color = getTextTheme().copy(0.1f))
                         .padding(MaterialTheme.dimens.small3),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = date.dayOfMonth.toString(),
+                        text = dayOfMonth,
                         style = MaterialTheme.typography.headlineLarge,
                         color = getTextTheme()
                     )
                     Text(
-                        text = date.month.toString().substring(0, 3),
+                        text = month.substring(0, 3),
                         style = MaterialTheme.typography.bodyMedium,
                         color = getTextTheme()
                     )
                     Text(
-                        text = date.year.toString(),
+                        text = year,
                         style = MaterialTheme.typography.bodyMedium,
                         color = getTextTheme()
                     )
                 }
             }
 
-            //TODO: CalculationOperation özelliğine göre "Cikarma, carpma islemi etc." gibi yazdirilacak.
-            Text(
-                text = "İşlemin adı",
-                style = MaterialTheme.typography.bodyMedium,
-                color = getTextTheme()
-            )
-
             Column(
                 modifier = Modifier.padding(MaterialTheme.dimens.small3),
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.Start
             ) {
                 Text(
                     text = value,

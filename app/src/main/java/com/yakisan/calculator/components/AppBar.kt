@@ -19,7 +19,8 @@ import com.yakisan.calculator.ui.theme.dimens
 
 @Composable
 fun AppBar(
-    title : String,
+    title: String,
+    icon: Int = R.drawable.ic_history,
     onClick: () -> Unit = {}
 ) {
     Row(
@@ -39,14 +40,11 @@ fun AppBar(
                 .noRippleClickable {
                     onClick()
                 },
-            painter = painterResource(id = R.drawable.ic_history),
+            painter = painterResource(id = icon),
             contentDescription = "",
             tint = getTextTheme()
         )
 
     }
-
-    //TODO: Icon tercihe bagli olmali.
-
 
 }

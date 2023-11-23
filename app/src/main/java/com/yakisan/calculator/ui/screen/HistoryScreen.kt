@@ -2,44 +2,45 @@ package com.yakisan.calculator.ui.screen
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.yakisan.calculator.R
 import com.yakisan.calculator.components.AppBar
 import com.yakisan.calculator.components.HistoryCard
-import com.yakisan.calculator.domain.CalculatorOperation
-import com.yakisan.calculator.model.History
-import java.time.LocalDateTime
+import com.yakisan.calculator.core.getTheme
+import com.yakisan.calculator.ui.theme.CalculatorTheme
+import com.yakisan.calculator.viewmodel.HistoryViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HistoryScreen(
-    navController: NavHostController,
+    viewModel: HistoryViewModel = hiltViewModel(),
 ) {
-    val current = LocalDateTime.now()
+    val histories = viewModel.historyList.observeAsState(emptyList())
 
-    val history : List<History> = listOf(
-        History(current, "522 - 2", "520"),
-        History(current, "522 - 2", "520"),
-        History(current, "522 - 2", "520"),
-        History(current, "522 - 2", "520"),
-    )
-    Column {
-        // Navigating history screen
-        AppBar(
-            title = "History",
-        )
-
+    CalculatorTheme(navigationBarColor = getTheme()) {
+        //Content
         LazyColumn {
-            items(history.size) { item ->
-                HistoryCard(date = history[item].date, value =history[item].value , result = history[item].result, operation = CalculatorOperation.Add)
+            item {
+                AppBar(
+                    title = stringResource(R.string.history), icon = R.drawable.ic_delete,
+                    onClick = {
+                        viewModel.deleteHistories(histories = histories.value)
+                    },
+                )
+            }
+            items(histories.value.size) { history ->
+                HistoryCard(
+                    dayOfMonth = histories.value[history].dayOfMonth!!,
+                    month = histories.value[history].month!!,
+                    year = histories.value[history].year!!,
+                    value = histories.value[history].value ?: "",
+                    result = histories.value[history].result ?: "",
+                )
             }
         }
     }
-
-
-
-
-
 }
