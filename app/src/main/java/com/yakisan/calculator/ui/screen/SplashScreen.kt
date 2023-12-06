@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -19,8 +17,6 @@ import com.yakisan.calculator.R
 import com.yakisan.calculator.core.getTheme
 import com.yakisan.calculator.navigation.Screen
 import com.yakisan.calculator.ui.theme.CalculatorTheme
-import com.yakisan.calculator.ui.theme.DarkBlue
-import com.yakisan.calculator.ui.theme.LightBlue
 import com.yakisan.calculator.ui.theme.dimens
 import kotlinx.coroutines.delay
 
