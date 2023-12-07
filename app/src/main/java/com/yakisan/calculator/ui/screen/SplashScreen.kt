@@ -27,6 +27,9 @@ fun SplashScreen(navController: NavController) {
         delay(1000) // 1 saniye gecikme -> HomeScreen
         navController.navigate(Screen.HomeScreen.route)
     }
+    //TODO: .0 double değerleri kaldır.
+    //TODO: Yalnızca tek işlem yapılıyor onun  dışında işlem yapamıyorum.
+    //TODO: Sıralı olarak işlemler devam etmeli.
     //Theme Control
     val theme = getTheme()
     val logo = if (isSystemInDarkTheme()) R.drawable.calculator_light_blue_logo else R.drawable.calculator_dark_blue_logo
