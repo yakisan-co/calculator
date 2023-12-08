@@ -10,6 +10,7 @@ data class History(
     @ColumnInfo(name = "dayOfMonth") val dayOfMonth: String?,
     @ColumnInfo(name = "month") val month: String?,
     @ColumnInfo(name = "year") val year: String?,
+    @ColumnInfo(name = "time") val time: String?,
     @ColumnInfo(name = "value") val value: String?,
     @ColumnInfo(name = "result") val result: String?,
 )

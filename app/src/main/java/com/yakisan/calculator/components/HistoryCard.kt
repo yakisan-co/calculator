@@ -30,6 +30,7 @@ fun HistoryCard(
     dayOfMonth: String,
     month: String,
     year: String,
+    time: String,
     value: String,
     result: String,
 ) {
@@ -77,6 +78,11 @@ fun HistoryCard(
                     )
                     Text(
                         text = year,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = getTextTheme()
+                    )
+                    Text(
+                        text = time,
                         style = MaterialTheme.typography.bodyMedium,
                         color = getTextTheme()
                     )

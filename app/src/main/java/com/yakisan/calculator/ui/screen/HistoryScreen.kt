@@ -37,6 +37,7 @@ fun HistoryScreen(
                     dayOfMonth = histories.value[history].dayOfMonth!!,
                     month = histories.value[history].month!!,
                     year = histories.value[history].year!!,
+                    time = histories.value[history].time!!,
                     value = histories.value[history].value ?: "",
                     result = histories.value[history].result ?: "",
                 )
