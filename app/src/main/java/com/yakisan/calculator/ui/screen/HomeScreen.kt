@@ -376,6 +376,18 @@ fun HomeScreen(viewModel: CalculatorViewModel = hiltViewModel(), navController: 
                         horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
                     ) {
                         CalculatorButton(
+                            symbol = "000",
+                            modifier = Modifier
+                                .aspectRatio(1f)
+                                .weight(1f),
+                            textStyle = TextStyle(
+                                fontWeight = FontWeight(500),
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
+                            )
+                        ) {
+                            viewModel.onAction(CalculatorAction.AddTripleZero)
+                        }
+                        CalculatorButton(
                             symbol = "00",
                             modifier = Modifier
                                 .aspectRatio(1f)
@@ -385,7 +397,7 @@ fun HomeScreen(viewModel: CalculatorViewModel = hiltViewModel(), navController: 
                                 fontSize = MaterialTheme.typography.headlineLarge.fontSize
                             )
                         ) {
-                            viewModel.onAction(CalculatorAction.AddZero)
+                            viewModel.onAction(CalculatorAction.AddDoubleZero)
                         }
                         CalculatorButton(
                             symbol = "0",
@@ -398,18 +410,6 @@ fun HomeScreen(viewModel: CalculatorViewModel = hiltViewModel(), navController: 
                             )
                         ) {
                             viewModel.onAction(CalculatorAction.Number(0))
-                        }
-                        CalculatorButton(
-                            symbol = ".",
-                            modifier = Modifier
-                                .aspectRatio(1f)
-                                .weight(1f),
-                            textStyle = TextStyle(
-                                fontWeight = FontWeight(500),
-                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
-                            )
-                        ) {
-                            viewModel.onAction(CalculatorAction.Decimal)
                         }
                         CalculatorButton(
                             symbol = "=",

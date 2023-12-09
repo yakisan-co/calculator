@@ -8,5 +8,6 @@ sealed class CalculatorAction {
     object Calculate : CalculatorAction()
     object Decimal : CalculatorAction()
     object Percent : CalculatorAction()
-    object AddZero : CalculatorAction()
+    object AddDoubleZero : CalculatorAction()
+    object AddTripleZero : CalculatorAction()
 }

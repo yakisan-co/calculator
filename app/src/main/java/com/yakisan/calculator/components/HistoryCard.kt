@@ -14,9 +14,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import com.yakisan.calculator.R
 import com.yakisan.calculator.core.getTextTheme
 import com.yakisan.calculator.core.getTheme
 import com.yakisan.calculator.ui.theme.DarkBlue
@@ -46,6 +51,11 @@ fun HistoryCard(
             )
             .clip(shape = RoundedCornerShape(20))
             .background(color = boxColor.copy(0.1f))
+            .paint(
+                painterResource(id = R.drawable.hand_calculator_history),
+                contentScale = ContentScale.Fit, alignment = AbsoluteAlignment.BottomRight,
+                 alpha = 0.1f
+            )
     ) {
         Row(
             modifier = Modifier
@@ -105,7 +115,6 @@ fun HistoryCard(
                 )
 
             }
-
 
         }
 

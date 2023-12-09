@@ -40,10 +40,11 @@ class CalculatorViewModel @Inject constructor(
             }
 
             is CalculatorAction.Operation -> enterOperation(action.operation)
-            is CalculatorAction.Decimal -> enterDecimal()
             is CalculatorAction.Calculate -> calculate()
             is CalculatorAction.Percent -> performPercentage()
-            is CalculatorAction.AddZero -> addZero()
+            is CalculatorAction.AddDoubleZero -> addDoubleZero()
+            is CalculatorAction.AddTripleZero -> addTripleZero()
+            else -> {}
         }
     }
 
@@ -135,23 +136,9 @@ class CalculatorViewModel @Inject constructor(
         }
     }
 
-    //TODO: Point fonksiyonu çalışmıyor.
-    //Add decimal func.
-    private fun enterDecimal() {
-        if (state.operation == null && !state.number1.contains(".") && state.number1.isNotBlank()) {
-            state = state.copy(
-                number1 = state.number1 + "."
-            )
-            return
-        } else if (!state.number2.contains(".") && state.number2.isNotBlank()) {
-            state = state.copy(
-                number2 = state.number2 + "."
-            )
-        }
-    }
 
     //Add double zero func.
-    private fun addZero() {
+    private fun addDoubleZero() {
         if (state.operation == null) {
             state = state.copy(
                 number1 = state.number1 + "00"
@@ -162,6 +149,20 @@ class CalculatorViewModel @Inject constructor(
             number2 = state.number2 + "00"
         )
     }
+
+    //Add three zero func.
+    private fun addTripleZero() {
+        if (state.operation == null) {
+            state = state.copy(
+                number1 = state.number1 + "000"
+            )
+            return
+        }
+        state = state.copy(
+            number2 = state.number2 + "000"
+        )
+    }
+
 
     //Enter number func.
     private fun enterNumber(number: Int) {

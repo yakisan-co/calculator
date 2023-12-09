@@ -5,9 +5,12 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.yakisan.calculator.R
+import com.yakisan.calculator.components.AlertDialog
 import com.yakisan.calculator.components.AppBar
 import com.yakisan.calculator.components.HistoryCard
 import com.yakisan.calculator.core.getTheme
@@ -20,6 +23,7 @@ fun HistoryScreen(
     viewModel: HistoryViewModel = hiltViewModel(),
 ) {
     val histories = viewModel.historyList.observeAsState(emptyList())
+    val showDialog = remember { mutableStateOf(false) } //Alert Dialog
 
     CalculatorTheme(navigationBarColor = getTheme()) {
         //Content
@@ -28,7 +32,8 @@ fun HistoryScreen(
                 AppBar(
                     title = stringResource(R.string.history), icon = R.drawable.ic_delete,
                     onClick = {
-                        viewModel.deleteHistories(histories = histories.value)
+                        showDialog.value = true
+
                     },
                 )
             }
@@ -44,4 +49,25 @@ fun HistoryScreen(
             }
         }
     }
+
+    if(showDialog.value){
+        AlertDialog(
+            //Email Not Found
+            title = "Calculation Deletion",
+            description = "All calculation history will be deleted, do you agree?",
+            icon = R.drawable.ic_delete,
+            buttonTitle = "Yes",
+            //It should be active.
+            buttonClicked = {
+                showDialog.value = false
+                viewModel.deleteHistories(histories = histories.value)
+                println("Clicked delete & deleted histories")
+            },
+            showDialog = showDialog.value ,
+            onDismiss = { showDialog.value  = false }
+        )
+    }
+
+
+
 }
