@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -19,8 +17,6 @@ import com.yakisan.calculator.R
 import com.yakisan.calculator.core.getTheme
 import com.yakisan.calculator.navigation.Screen
 import com.yakisan.calculator.ui.theme.CalculatorTheme
-import com.yakisan.calculator.ui.theme.DarkBlue
-import com.yakisan.calculator.ui.theme.LightBlue
 import com.yakisan.calculator.ui.theme.dimens
 import kotlinx.coroutines.delay
 
@@ -31,6 +27,9 @@ fun SplashScreen(navController: NavController) {
         delay(1000) // 1 saniye gecikme -> HomeScreen
         navController.navigate(Screen.HomeScreen.route)
     }
+    //TODO: .0 double değerleri kaldır.
+    //TODO: Yalnızca tek işlem yapılıyor onun  dışında işlem yapamıyorum.
+    //TODO: Sıralı olarak işlemler devam etmeli.
     //Theme Control
     val theme = getTheme()
     val logo = if (isSystemInDarkTheme()) R.drawable.calculator_light_blue_logo else R.drawable.calculator_dark_blue_logo

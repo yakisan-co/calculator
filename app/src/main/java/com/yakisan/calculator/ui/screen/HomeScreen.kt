@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -21,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -90,7 +92,8 @@ fun HomeScreen(viewModel: CalculatorViewModel = hiltViewModel(), navController: 
                 //ALL PROCESS TEXT
                 Text(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .align(Alignment.End)
+                        .animateContentSize()
                         .padding(
                             start = MaterialTheme.dimens.medium1,
                             end = MaterialTheme.dimens.medium1,
@@ -105,7 +108,8 @@ fun HomeScreen(viewModel: CalculatorViewModel = hiltViewModel(), navController: 
                 //SUMMARY TEXT
                 Text(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .align(Alignment.End)
+                        .animateContentSize()
                         .padding(
                             start = MaterialTheme.dimens.medium1,
                             end = MaterialTheme.dimens.medium1,
@@ -372,6 +376,18 @@ fun HomeScreen(viewModel: CalculatorViewModel = hiltViewModel(), navController: 
                         horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
                     ) {
                         CalculatorButton(
+                            symbol = "000",
+                            modifier = Modifier
+                                .aspectRatio(1f)
+                                .weight(1f),
+                            textStyle = TextStyle(
+                                fontWeight = FontWeight(500),
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
+                            )
+                        ) {
+                            viewModel.onAction(CalculatorAction.AddTripleZero)
+                        }
+                        CalculatorButton(
                             symbol = "00",
                             modifier = Modifier
                                 .aspectRatio(1f)
@@ -381,7 +397,7 @@ fun HomeScreen(viewModel: CalculatorViewModel = hiltViewModel(), navController: 
                                 fontSize = MaterialTheme.typography.headlineLarge.fontSize
                             )
                         ) {
-                            viewModel.onAction(CalculatorAction.AddZero)
+                            viewModel.onAction(CalculatorAction.AddDoubleZero)
                         }
                         CalculatorButton(
                             symbol = "0",
@@ -394,18 +410,6 @@ fun HomeScreen(viewModel: CalculatorViewModel = hiltViewModel(), navController: 
                             )
                         ) {
                             viewModel.onAction(CalculatorAction.Number(0))
-                        }
-                        CalculatorButton(
-                            symbol = ".",
-                            modifier = Modifier
-                                .aspectRatio(1f)
-                                .weight(1f),
-                            textStyle = TextStyle(
-                                fontWeight = FontWeight(500),
-                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
-                            )
-                        ) {
-                            viewModel.onAction(CalculatorAction.Decimal)
                         }
                         CalculatorButton(
                             symbol = "=",

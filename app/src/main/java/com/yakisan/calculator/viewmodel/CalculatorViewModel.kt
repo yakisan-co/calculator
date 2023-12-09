@@ -17,6 +17,7 @@ import com.yakisan.calculator.repository.HistoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,10 +40,11 @@ class CalculatorViewModel @Inject constructor(
             }
 
             is CalculatorAction.Operation -> enterOperation(action.operation)
-            is CalculatorAction.Decimal -> enterDecimal()
             is CalculatorAction.Calculate -> calculate()
             is CalculatorAction.Percent -> performPercentage()
-            is CalculatorAction.AddZero -> addZero()
+            is CalculatorAction.AddDoubleZero -> addDoubleZero()
+            is CalculatorAction.AddTripleZero -> addTripleZero()
+            else -> {}
         }
     }
 
@@ -56,8 +58,8 @@ class CalculatorViewModel @Inject constructor(
     //Add general calculate func.
     @RequiresApi(Build.VERSION_CODES.O)
     private fun calculate() {
-        val number1 = state.number1.toDoubleOrNull()
-        val number2 = state.number2.toDoubleOrNull()
+        val number1 = state.number1.toIntOrNull()
+        val number2 = state.number2.toIntOrNull()
 
         if (state.operation == null) {
             Log.e("CalculatorViewModel", "Operation is null in calculate()")
@@ -77,15 +79,19 @@ class CalculatorViewModel @Inject constructor(
                 }
             }
             val currentDate = LocalDate.now()
+            val hour = (LocalTime.now().hour).toString() + ":" +  (LocalTime.now().minute).toString()
             history = "$number1 ${state.operation?.symbol ?: ""} $number2"
 
+            //TODO: Aylar için Türkçe dil desteği verilmeli.
+            //TODO: DECEMBER -> Aralık gibi.
             viewModelScope.launch {
                 repository.insertHistory(
                     history = History(
                         dayOfMonth = currentDate.dayOfMonth.toString(),
                         month = currentDate.month.toString(),
                         year = currentDate.year.toString(),
-                        value = history.toString(),
+                        time = hour,
+                        value = history,
                         result = result.toString()
                     )
                 )
@@ -118,8 +124,8 @@ class CalculatorViewModel @Inject constructor(
 
     //Add percentage func.
     private fun performPercentage() {
-        val number1 = state.number1.toDoubleOrNull()
-        val number2 = state.number2.toDoubleOrNull()
+        val number1 = state.number1.toIntOrNull()
+        val number2 = state.number2.toIntOrNull()
         if (number1 != null && number2 != null) {
             val result = number1 * number2 / 100
             state = state.copy(
@@ -130,22 +136,9 @@ class CalculatorViewModel @Inject constructor(
         }
     }
 
-    //Add decimal func.
-    private fun enterDecimal() {
-        if (state.operation == null && !state.number1.contains(".") && state.number1.isNotBlank()) {
-            state = state.copy(
-                number1 = state.number1 + "."
-            )
-            return
-        } else if (!state.number2.contains(".") && state.number2.isNotBlank()) {
-            state = state.copy(
-                number2 = state.number2 + "."
-            )
-        }
-    }
 
     //Add double zero func.
-    private fun addZero() {
+    private fun addDoubleZero() {
         if (state.operation == null) {
             state = state.copy(
                 number1 = state.number1 + "00"
@@ -156,6 +149,20 @@ class CalculatorViewModel @Inject constructor(
             number2 = state.number2 + "00"
         )
     }
+
+    //Add three zero func.
+    private fun addTripleZero() {
+        if (state.operation == null) {
+            state = state.copy(
+                number1 = state.number1 + "000"
+            )
+            return
+        }
+        state = state.copy(
+            number2 = state.number2 + "000"
+        )
+    }
+
 
     //Enter number func.
     private fun enterNumber(number: Int) {
