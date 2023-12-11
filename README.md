@@ -3,6 +3,8 @@
 This simple calculator app allows you to easily perform basic math operations. 
 Available in both dark theme and light theme, its user-friendly interface helps you do your math calculations quickly and efficiently.
 
+[<img src="https://github.com/yakisan-co/calculator/assets/116274664/2ef90a5d-edd2-4a63-bf6b-ee333ecb7c74">](https://play.google.com/store/apps/details?id=com.yakisan.calculator)
+
 ## 🤩 Features
 
 👉🏼 Supports basic math operations such as addition, subtraction, multiplication and division.    
